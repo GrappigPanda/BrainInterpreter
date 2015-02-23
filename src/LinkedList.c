@@ -3,72 +3,73 @@
 
 struct Node {
     int value;
-    struct Node* next;
-    struct Node* prev;
+    struct Node *next;
+    struct Node *prev;
 };
 
-struct Node* find_list_head(struct Node* current) {
-    struct Node* head = current;
+struct Node* find_list_head(struct Node *current) {
+        struct Node *head = current;
 
-    while(head->prev != NULL) {
-	head = head->prev;
-    }
+        while(head->prev != NULL) {
+                head = head->prev;
+        }
 
-    return head;
+        return head;
 }
 
-struct Node* create(int value) {
-    struct Node* temp = malloc(2 * sizeof(struct Node));
-    temp->value = value;
-    temp->next = NULL;
-    temp->prev = NULL;
-    return temp;
+struct Node *create(int value) {
+        struct Node *tmp = malloc(2 * sizeof(struct Node));
+        tmp->value = value;
+        tmp->next = NULL;
+        tmp->prev = NULL;
+        
+        return tmp;
 }
 
-struct Node* delete(struct Node* ToDelete) {
-    return NULL;
+struct Node* delete(struct Node *ToDelete) {
+        return NULL;
 }
 
-void free_all_registers(struct Node* current) {
-    struct Node* head = find_list_head(current);
-    while(head->next != NULL) {
-	head = head->next;
-	free(head->prev);
-	head->prev = NULL;
-    }
-    free(head);
+void free_all_registers(struct Node *current) {
+        struct Node *head = find_list_head(current);
+        while(head->next != NULL) {
+                head = head->next;
+                free(head->prev);
+                head->prev = NULL;
+        }
+        free(head);
 }
 
-struct Node* append(struct Node* fst, struct Node* sec) {
-    struct Node* temp = create(0);
-    temp->next = fst->next;
+struct Node *append(struct Node *fst, struct Node *sec) {
+        struct Node *tmp = create(0);
+        tmp->next = fst->next;
 
-    fst->next = sec;
-    sec->prev = fst;
-    sec->next = temp->next;
+        fst->next = sec;
+        sec->prev = fst;
+        sec->next = tmp->next;
 
-    return sec;
+        return sec;
 }
 
-void print_registers(struct Node* current) {
-    struct Node* head = find_list_head(current);
-    int count = 0;
+void print_registers(struct Node *current) {
+        struct Node *head = find_list_head(current);
+        int count = 0;
 
-    while(head->next != NULL) {
-	printf("%d:%d\n", count, head->value);
-	head = head->next;
-    }
+        while(head->next != NULL) {
+                printf("%d:%d\n", count, head->value);
+                head = head->next;
+        }
 }
 
-struct Node* prepend(struct Node* fst, struct Node* sec) {
-    struct Node* temp = create(0);
-    temp->next = fst->next;
-    temp->prev = fst->prev;
+struct Node* prepend(struct Node *fst, struct Node *sec) {
+        struct Node *tmp = create(0);
+        tmp->next = fst->next;
+        tmp->prev = fst->prev;
 
 
-    fst->prev = sec;
-    sec->next = fst;
-    sec->prev = temp->prev;
+        fst->prev = sec;
+        sec->next = fst;
+        sec->prev = tmp->prev;
 
-    return sec;
+        return sec;
 }

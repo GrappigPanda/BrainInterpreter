@@ -2,84 +2,96 @@
 #include <string.h>
 #include "LinkedList.c"
 
-int findwherelastloop(char *commands, int count) {
-    while(count != 0) {
-    if(commands[count] == '[') {
-        return count;
-    }
-    --count;
-    }
-    return -1;
+int find_last_loop(char *commands, int count)
+{
+        while(count != 0) {
+                if(commands[count] == '[') {
+                        return count;
+                }
+        --count;
+        }
+        return -1;
 }
 
-void parse_commands(struct Node* DataList, char *commands, int count, int where) {
-    switch(commands[count]) {
+void parse_commands(struct Node *data_list, char *commands,
+                    int count, int where)
+{
+        switch(commands[count]) {
         case '+':
-            DataList->value += 1;
-            break;
+                data_list->value += 1;
+                break;
         case '-':
-            DataList->value -= 1;
-            break;
+                data_list->value -= 1;
+                break;
         case '>': {
-            if(DataList->next == NULL) {
-                struct Node* new = create(0);
-                DataList = append(DataList, new);
-            } else
-                DataList = DataList->next;
-            break;
+                if(data_list->next == NULL) {
+                        struct Node *new = create(0);
+                        data_list = append(data_list, new);
+                } else {
+                        data_list = data_list->next;
+                }
+                break;
         }
         case '<': {
-            if(DataList->prev == NULL) {
-                struct Node* new = create(0);
-                DataList = prepend(DataList, new);
-            } else
-            DataList = DataList->prev;
-            break;
+                if(data_list->prev == NULL) {
+                        struct Node *new = create(0);
+                        data_list = prepend(data_list, new);
+                } else {
+                        data_list = data_list->prev;
+                }
+                break;
         }
         case ',':
-            DataList->value = getchar();
-            break;
+                data_list->value = getchar();
+                break;
         case '.':
-            putchar(DataList->value);
-            break;
+                putchar(data_list->value);
+                break;
         case '[':
-            break;
+                break;
         case ']': {
-            if(!(DataList->value == 0)) {
-                if(where == -1) {
-                    where = findwherelastloop(commands, count);
-                    if(where == -1)
-                        return;
-                    else
-                        parse_commands(DataList, commands, where, where);
-                } else
-                    parse_commands(DataList, commands, where, where);
-            } else
-                parse_commands(DataList, commands, ++count, where);
+                if(!(data_list->value == 0)) {
+                        if(where == -1) {
+                                where = find_last_loop(commands, count);
+                                if(where == -1)
+                                        return;
+                                else
+                                        parse_commands(data_list, commands,
+                                                       where, where);
+                        } else {
+                                parse_commands(data_list, commands,
+                                               where, where);
+                        }
+                } else {
+                        parse_commands(data_list, commands, ++count, where);
+                }
         }
         default:
-            return;
-    }
-    if(strlen(commands) == count) {
-        return;
-    }
-    else
-        parse_commands(DataList, commands, ++count, where);
+                return;
+        }
+        
+        if(strlen(commands) == count) {
+                return;
+        } else {
+                parse_commands(data_list, commands, ++count, where);
+        }
 }
 
-int parse_commands_list(struct Node* DataList, char *commands) {
+int parse_commands_list(struct Node* data_list, char *commands)
+{
     int command_len = strlen(commands);
 
     if(!(command_len > 0))
         return -1;
 
-    parse_commands(DataList, commands, 0, -1);
+    parse_commands(data_list, commands, 0, -1);
 
     return 0;
 }
 
-int main() {
-    struct Node* fst = create(0);
+int main()
+{
+    struct Node *fst = create(0);
     parse_commands_list(fst, "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.");
     free_all_registers(fst);
     return 0;
